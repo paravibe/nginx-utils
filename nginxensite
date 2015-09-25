@@ -1,0 +1,19 @@
+#!/bin/bash
+
+SITES_AVAILABLE=/usr/local/etc/nginx/sites-available/ 
+SITES_ENABLED=/usr/local/etc/nginx/sites-enabled/
+
+if [[ $EUID -ne 0 ]]; then
+  echo >&2 "This operation requires root."
+  exit
+fi
+
+if [[ -z "$1" ]]; then
+  echo >&2 "Usage: $0 SITE"
+  exit
+fi
+
+site=$1
+
+ln -s $SITES_AVAILABLE$site $SITES_ENABLED
+nginx -s reload
